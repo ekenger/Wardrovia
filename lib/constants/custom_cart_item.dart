@@ -45,12 +45,12 @@ class CartItem {
     };
   }
 
-  // Fiyatı double olarak döndür
+  
   double get priceAsDouble {
     return double.tryParse(price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0.0;
   }
 
-  // Toplam fiyat
+  
   double get totalPrice {
     return priceAsDouble * quantity;
   }

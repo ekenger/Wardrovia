@@ -20,10 +20,8 @@ class OrderService {
     if (_userId.isEmpty) throw Exception('User not authenticated');
 
     try {
-      // Generate order ID
       final orderId = _firestore.collection('orders').doc().id;
 
-      // Create order data
       final orderData = {
         'orderId': orderId,
         'userId': _userId,
@@ -47,10 +45,8 @@ class OrderService {
         'estimatedDelivery': DateTime.now().add(const Duration(days: 7)),
       };
 
-      // Save to Firestore
       await _firestore.collection('orders').doc(orderId).set(orderData);
 
-      // Clear user's cart after successful order
       await _clearUserCart();
 
       return orderId;

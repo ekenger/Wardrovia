@@ -20,7 +20,6 @@ class PaymentService {
   static Future<void> addPaymentMethod(PaymentCard card) async {
     if (_userId.isEmpty) return;
 
-    // Eğer bu varsayılan kart ise, diğerlerini varsayılan olmaktan çıkar
     if (card.isDefault) {
       await _removeDefaultFromOthers();
     }
@@ -36,7 +35,6 @@ class PaymentService {
   static Future<void> updatePaymentMethod(PaymentCard card) async {
     if (_userId.isEmpty) return;
 
-    // Eğer bu varsayılan kart ise, diğerlerini varsayılan olmaktan çıkar
     if (card.isDefault) {
       await _removeDefaultFromOthers();
     }
@@ -63,10 +61,8 @@ class PaymentService {
   static Future<void> setDefaultPaymentMethod(String cardId) async {
     if (_userId.isEmpty) return;
 
-    // Önce tüm kartları varsayılan olmaktan çıkar
     await _removeDefaultFromOthers();
 
-    // Seçilen kartı varsayılan yap
     await _firestore
         .collection('users')
         .doc(_userId)

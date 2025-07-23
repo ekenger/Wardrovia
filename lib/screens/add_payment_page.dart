@@ -536,7 +536,6 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
           ),
         );
 
-        // Form'u temizle
         _formKey.currentState!.reset();
         _cardHolderController.clear();
         _cardNumberController.clear();

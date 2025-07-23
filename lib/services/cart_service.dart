@@ -5,7 +5,6 @@ class CartService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Sepete ürün ekleme
   static Future<void> addToCart({
     required String productId,
     required String productName,
@@ -18,11 +17,9 @@ class CartService {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    // Benzersiz cart item ID'si oluştur (productId + size + color)
     final cartItemId =
         '${productId}_${size ?? 'default'}_${color ?? 'default'}';
 
-    // Önce mevcut öğeyi kontrol et
     final existingItem =
         await _firestore
             .collection('users')
@@ -32,7 +29,6 @@ class CartService {
             .get();
 
     if (existingItem.exists) {
-      // Mevcut öğe varsa miktarını artır
       final currentQuantity = existingItem.data()?['quantity'] ?? 0;
       await _firestore
           .collection('users')
@@ -44,7 +40,6 @@ class CartService {
             'updatedAt': FieldValue.serverTimestamp(),
           });
     } else {
-      // Yeni öğe ekle
       final cartItem = {
         'productId': productId,
         'productName': productName,
@@ -65,7 +60,6 @@ class CartService {
     }
   }
 
-  // Sepetten ürün çıkarma
   static Future<void> removeFromCart(String cartItemId) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -78,7 +72,6 @@ class CartService {
         .delete();
   }
 
-  // Ürün adedini güncelleme
   static Future<void> updateQuantity(String cartItemId, int quantity) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -96,7 +89,6 @@ class CartService {
         .update({'quantity': quantity});
   }
 
-  // Sepet verilerini gerçek zamanlı dinleme
   static Stream<QuerySnapshot> getUserCartItems() {
     final user = _auth.currentUser;
     if (user == null) {
@@ -111,7 +103,6 @@ class CartService {
         .snapshots();
   }
 
-  // Sepeti temizleme
   static Future<void> clearCart() async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -160,7 +151,6 @@ class CartService {
         final cartData = doc.data();
         final productId = cartData['productId'];
 
-        // Get product details from products collection
         final productDoc =
             await _firestore.collection('products').doc(productId).get();
 
@@ -176,7 +166,6 @@ class CartService {
             'quantity': cartData['quantity'] ?? 1,
           });
         } else {
-          // Fallback if product not found
           cartItems.add({
             'productId': productId,
             'name': cartData['productName'] ?? '',

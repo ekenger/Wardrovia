@@ -90,27 +90,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             _buildHeader(),
 
-            // Content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     const SizedBox(height: 41),
 
-                    // Shipping Address Section
                     _buildShippingAddressSection(),
 
                     const SizedBox(height: 16),
 
-                    // Payment Method Section
                     _buildPaymentMethodSection(),
 
                     const SizedBox(height: 134),
 
-                    // Order Summary
                     _buildOrderSummary(),
 
                     const SizedBox(height: 60),
@@ -119,7 +114,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ),
 
-            // Bottom Section with Place Order Button
             _buildBottomSection(),
           ],
         ),
@@ -429,7 +423,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ),
           ),
-          // Home Indicator
+
           Container(
             width: 134,
             height: 5,
@@ -506,10 +500,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
 
     try {
-      // Get complete cart items with product details
       final completeCartItems = await CartService.getCartItemsForOrder();
 
-      // Create order using OrderService
       final orderId = await OrderService.createOrder(
         items: completeCartItems,
         totalAmount: widget.total,
@@ -519,7 +511,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         discountAmount: widget.discountAmount,
       );
 
-      // Navigate to order placed page
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -529,7 +520,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         );
       }
     } catch (e) {
-      // Handle error
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

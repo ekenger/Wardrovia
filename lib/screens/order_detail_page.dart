@@ -62,7 +62,6 @@ class OrderDetailPage extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          // Header
           _buildHeader(context, "Sipariş Detayı"),
 
           const SizedBox(height: 41),
@@ -71,17 +70,14 @@ class OrderDetailPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // Order status timeline
                   _buildStatusTimeline(orderStatus, createdAt),
 
                   const SizedBox(height: 40),
 
-                  // Order Items
                   _buildOrderItems(items, finalAmount),
 
                   const SizedBox(height: 40),
 
-                  // Shipping details
                   _buildShippingDetails(shippingAddress),
 
                   const SizedBox(height: 40),
@@ -143,7 +139,6 @@ class OrderDetailPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          // Always show delivered at top
           _buildStatusItem(
             isCompleted: orderStatus == 'delivered',
             isActive: orderStatus == 'delivered',

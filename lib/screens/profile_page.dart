@@ -138,7 +138,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                               break;
                             case 'Destek':
-                              //Navigator.pushNamed(context, '/support');
                               break;
                             default:
                               break;

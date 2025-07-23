@@ -35,28 +35,23 @@ class _OrdersPageState extends State<OrdersPage> {
           );
         }
 
-        // If user has no orders at all, show simple empty state
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return _buildEmptyState();
         }
 
-        // If user has orders, show the full interface with filters
         return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
             child: Column(
               children: [
-                // Header
                 _buildHeader(),
 
                 const SizedBox(height: 41),
 
-                // Filter tabs
                 _buildFilterTabs(),
 
                 const SizedBox(height: 24),
 
-                // Orders list
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream: OrderService.getUserOrdersByStatus(selectedFilter),
@@ -83,7 +78,6 @@ class _OrdersPageState extends State<OrdersPage> {
 
                       final orders = snapshot.data!.docs;
 
-                      // Sort orders by creation date manually
                       orders.sort((a, b) {
                         final aData = a.data() as Map<String, dynamic>;
                         final bData = b.data() as Map<String, dynamic>;
@@ -94,9 +88,7 @@ class _OrdersPageState extends State<OrdersPage> {
                         if (aTimestamp == null) return 1;
                         if (bTimestamp == null) return -1;
 
-                        return bTimestamp.compareTo(
-                          aTimestamp,
-                        ); // Descending order
+                        return bTimestamp.compareTo(aTimestamp);
                       });
 
                       return _buildOrdersList(orders);
@@ -201,7 +193,6 @@ class _OrdersPageState extends State<OrdersPage> {
     final orderStatus = orderData['orderStatus'] ?? '';
     final totalAmount = orderData['finalAmount'] ?? 0.0;
 
-    // Format date
     final createdAt = orderData['createdAt'] as Timestamp?;
     final dateStr =
         createdAt != null

@@ -33,9 +33,8 @@ class _CustomItemBannerState extends State<CustomItemBanner> {
     super.initState();
   }
 
-  // Favori toggle işlemi
   Future<void> _toggleFavorite(bool currentFavState) async {
-    if (isLoading) return; // Çoklu tıklamayı engelle
+    if (isLoading) return;
 
     setState(() {
       isLoading = true;
@@ -43,10 +42,8 @@ class _CustomItemBannerState extends State<CustomItemBanner> {
 
     try {
       if (currentFavState) {
-        // Favorilerden çıkar
         await FavoritesService.removeFromFavorites(widget.productId);
       } else {
-        // Favorilere ekle
         await FavoritesService.addToFavorites(
           productId: widget.productId,
           itemName: widget.itemName,
@@ -56,7 +53,6 @@ class _CustomItemBannerState extends State<CustomItemBanner> {
         );
       }
     } catch (e) {
-      // Hata durumunda kullanıcıyı bilgilendir
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -182,7 +178,6 @@ class _CustomItemBannerState extends State<CustomItemBanner> {
   }
 }
 
-// Güncellenen veri listeleri - productId ve targetGender parametresi eklendi
 final topSellingItems = [
   {
     'productId': 'erkek_harrington_ceket_001',

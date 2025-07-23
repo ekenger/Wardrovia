@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CouponService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Kupon kontrolü
   static Future<Map<String, dynamic>?> validateCoupon(String couponCode) async {
     try {
       final doc =
@@ -17,8 +16,6 @@ class CouponService {
       final data = doc.data()!;
       final expiryDate = (data['expiryDate'] as Timestamp).toDate();
       final isActive = data['isActive'] as bool;
-
-      // Kuponun aktif ve süresi dolmamış olup olmadığını kontrol et
       if (!isActive || DateTime.now().isAfter(expiryDate)) {
         return null;
       }
@@ -29,13 +26,11 @@ class CouponService {
     }
   }
 
-  // İndirim hesaplama
   static double calculateDiscount(
     double subtotal,
     Map<String, dynamic> coupon,
   ) {
-    final discountType =
-        coupon['discountType'] as String; // 'percentage' veya 'fixed'
+    final discountType = coupon['discountType'] as String;
     final discountValue = (coupon['discountValue'] as num).toDouble();
     final minOrderAmount = (coupon['minOrderAmount'] as num?)?.toDouble() ?? 0;
 

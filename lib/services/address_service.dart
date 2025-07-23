@@ -20,7 +20,7 @@ class AddressService {
   static Future<void> addAddress(Address address) async {
     if (_userId.isEmpty) return;
 
-    // Eğer bu varsayılan adres ise, diğerlerini varsayılan olmaktan çıkar
+    
     if (address.isDefault) {
       await _removeDefaultFromOthers();
     }
@@ -36,7 +36,7 @@ class AddressService {
   static Future<void> updateAddress(Address address) async {
     if (_userId.isEmpty) return;
 
-    // Eğer bu varsayılan adres ise, diğerlerini varsayılan olmaktan çıkar
+    
     if (address.isDefault) {
       await _removeDefaultFromOthers();
     }
@@ -63,10 +63,10 @@ class AddressService {
   static Future<void> setDefaultAddress(String addressId) async {
     if (_userId.isEmpty) return;
 
-    // Önce tüm adresleri varsayılan olmaktan çıkar
+    
     await _removeDefaultFromOthers();
 
-    // Seçilen adresi varsayılan yap
+    
     await _firestore
         .collection('users')
         .doc(_userId)

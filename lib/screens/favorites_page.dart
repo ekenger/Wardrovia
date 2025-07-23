@@ -82,9 +82,7 @@ class FavoritesPage extends StatelessWidget {
                         final favorite =
                             favorites[index].data() as Map<String, dynamic>;
                         return CustomItemBanner(
-                          key: ValueKey(
-                            favorite['productId'],
-                          ), // ProductId'yi benzersiz key olarak kullan
+                          key: ValueKey(favorite['productId']),
                           productId: favorite['productId'],
                           imageUrl: favorite['imageUrl'],
                           itemName: favorite['itemName'],

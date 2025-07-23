@@ -5,7 +5,6 @@ class FavoritesService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Favori ekleme
   static Future<void> addToFavorites({
     required String productId,
     required String itemName,
@@ -29,11 +28,10 @@ class FavoritesService {
         .collection('users')
         .doc(user.uid)
         .collection('favorites')
-        .doc(productId) // productId'yi unique ID olarak kullanıyoruz
+        .doc(productId)
         .set(favoriteItem);
   }
 
-  // Favorilerden çıkarma
   static Future<void> removeFromFavorites(String productId) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -46,7 +44,6 @@ class FavoritesService {
         .delete();
   }
 
-  // Favori kontrolü
   static Future<bool> isFavorite(String productId) async {
     final user = _auth.currentUser;
     if (user == null) return false;
@@ -62,7 +59,6 @@ class FavoritesService {
     return doc.exists;
   }
 
-  // Tüm favorileri getirme
   static Stream<QuerySnapshot> getUserFavorites() {
     final user = _auth.currentUser;
     if (user == null) {

@@ -21,7 +21,6 @@ class _CartPageState extends State<CartPage> {
   bool isApplyingCoupon = false;
   String? couponError;
 
-  // Sabit değerler
   static const double freeShippingThreshold = 500.0;
   static const double shippingFee = 49.99;
   static const double taxRate = 0.1;
@@ -78,10 +77,8 @@ class _CartPageState extends State<CartPage> {
   Widget _buildEmptyCart() {
     return Column(
       children: [
-        // Header
         _buildHeader(hasItems: false),
 
-        // Boş Sepet
         Expanded(
           child: Center(
             child: Column(
@@ -121,27 +118,18 @@ class _CartPageState extends State<CartPage> {
 
     return Column(
       children: [
-        // Header
         _buildHeader(hasItems: true),
 
-        // Content - Expanded ile kaydırılabilir alan
         Expanded(
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Ürün listesi
-                _buildProductList(cartItems),
-              ],
-            ),
+            child: Column(children: [_buildProductList(cartItems)]),
           ),
         ),
 
-        // Alt kısım - Payment info, promo code ve checkout button
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              // Payment info
               Column(
                 children: [
                   _buildPaymentRow(
@@ -176,12 +164,10 @@ class _CartPageState extends State<CartPage> {
 
               const SizedBox(height: 30),
 
-              // Promo code
               _buildPromoCode(),
 
               const SizedBox(height: 40),
 
-              // Checkout button
               SizedBox(
                 width: 342,
                 height: 52,
@@ -223,7 +209,7 @@ class _CartPageState extends State<CartPage> {
               Navigator.pop(context);
             },
             icon: Image.asset('assets/icons/backbutton.png'),
-          ), // Balance for center alignment
+          ),
           Text(
             'Sepetim',
             style: GoogleFonts.gabarito(
@@ -276,7 +262,6 @@ class _CartPageState extends State<CartPage> {
       ),
       child: Row(
         children: [
-          // Product image
           Container(
             width: 64,
             height: 64,
@@ -291,12 +276,10 @@ class _CartPageState extends State<CartPage> {
 
           const SizedBox(width: 12),
 
-          // Product info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Name and price row
                 Row(
                   children: [
                     Expanded(
@@ -325,7 +308,7 @@ class _CartPageState extends State<CartPage> {
                 ),
 
                 const SizedBox(height: 8),
-                // Beden - Renk - Adet Row'u
+
                 Row(
                   children: [
                     Expanded(
@@ -354,7 +337,6 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
 
-                    // Quantity controls
                     Row(
                       children: [
                         GestureDetector(
@@ -463,7 +445,6 @@ class _CartPageState extends State<CartPage> {
       ),
       child: Row(
         children: [
-          // Discount icon
           Container(
             margin: const EdgeInsets.only(left: 16),
             width: 24,
@@ -473,7 +454,6 @@ class _CartPageState extends State<CartPage> {
 
           const SizedBox(width: 13),
 
-          // Text field
           Expanded(
             child: TextField(
               controller: _couponController,
@@ -497,7 +477,6 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
 
-          // Apply button
           GestureDetector(
             onTap: isApplyingCoupon ? null : _applyCoupon,
             child: Container(
@@ -528,13 +507,11 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // Helper methods
   double _calculateSubtotal(List<CartItem> items) {
     return items.fold(0.0, (total, item) => total + item.totalPrice);
   }
 
   Future<void> _updateQuantity(CartItem item, int newQuantity) async {
-    // CartItem'dan document ID'sini oluştur
     final cartItemId = '${item.productId}_${item.size}_${item.color}';
 
     if (newQuantity <= 0) {
@@ -608,7 +585,6 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _removeAllItems() async {
-    // Tüm sepet öğelerini kaldır
     final cartDocs = await CartService.getUserCartItems().first;
     for (var doc in cartDocs.docs) {
       await CartService.removeFromCart(doc.id);

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class ProductUploaderWidget extends StatelessWidget {
   ProductUploaderWidget({super.key});
 
-  // 🔧 Search kelimeleri oluşturan yardımcı fonksiyon
   List<String> generateSearchKeywords(String name) {
     final lower = name.toLowerCase();
     final words = lower.split(' ');
@@ -19,7 +18,6 @@ class ProductUploaderWidget extends StatelessWidget {
     return keywords.toList();
   }
 
-  // 🧩 Ürün listesi
   final List<Map<String, dynamic>> products = [
     {
       'name': 'Nike Sportswear Club Erkek Tişört',
@@ -89,7 +87,6 @@ class ProductUploaderWidget extends StatelessWidget {
     },
   ];
 
-  // 📤 Firestore'a veri yükleyen işlem
   Future<void> uploadProducts(BuildContext context) async {
     final snackBar = ScaffoldMessenger.of(context);
 

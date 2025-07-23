@@ -26,8 +26,8 @@ class OrderPlacedPage extends StatelessWidget {
             bottom: 0,
             left: 0,
             child: Container(
-              width: screenWidth, // Ekran genişliği kadar
-              height: screenHeight * 0.45, // Ekran yüksekliğinin %45'i kadar
+              width: screenWidth,
+              height: screenHeight * 0.45,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(

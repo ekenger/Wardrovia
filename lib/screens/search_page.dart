@@ -64,11 +64,9 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child:
                 searchText.isEmpty
-                    ? CustomAllCategories() // arama yoksa kategorileri göster
+                    ? CustomAllCategories()
                     : isLoading
-                    ? Center(
-                      child: CircularProgressIndicator(),
-                    ) // arama sürüyor
+                    ? Center(child: CircularProgressIndicator())
                     : products.isEmpty
                     ? CustomSorryWidget()
                     : Padding(

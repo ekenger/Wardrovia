@@ -36,9 +36,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   final List<String> sizes = ['XS', 'S', 'M', 'L', 'XL'];
   final List<Color> colors = [
-    const Color(0xFFB3B68B), // Yeşil
-    const Color(0xFF8E6CEF), // Mor
-    const Color(0xFF272727), // Siyah
+    const Color(0xFFB3B68B),
+    const Color(0xFF8E6CEF),
+    const Color(0xFF272727),
   ];
 
   @override
@@ -48,7 +48,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _checkCartItemCount();
   }
 
-  // Sayfa açılırken favoride olup olmadığını kontrol et
   Future<void> _checkIfFavorite() async {
     final favorite = await FavoritesService.isFavorite(widget.productId);
     if (mounted) {
@@ -58,7 +57,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
   }
 
-  // Sepetteki ürün sayısını kontrol et
   Future<void> _checkCartItemCount() async {
     try {
       final cartSnapshot = await CartService.getUserCartItems().first;
@@ -68,7 +66,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         });
       }
     } catch (e) {
-      // Hata durumunda varsayılan değer
       if (mounted) {
         setState(() {
           cartItemCount = 0;
@@ -77,9 +74,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
   }
 
-  // Favori toggle işlemi - custom_item_banner'dakiyle aynı
   Future<void> _toggleFavorite() async {
-    if (isLoading) return; // Çoklu tıklamayı engelle
+    if (isLoading) return;
 
     setState(() {
       isLoading = true;
@@ -87,7 +83,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     try {
       if (isFavorite) {
-        // Favorilerden çıkar
         await FavoritesService.removeFromFavorites(widget.productId);
         if (mounted) {
           setState(() {
@@ -95,7 +90,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           });
         }
       } else {
-        // Favorilere ekle
         await FavoritesService.addToFavorites(
           productId: widget.productId,
           itemName: widget.productName,
@@ -110,7 +104,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         }
       }
     } catch (e) {
-      // Hata durumunda kullanıcıyı bilgilendir
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -129,7 +122,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
   }
 
-  // Sepete ekleme fonksiyonu
   Future<void> _addToCart() async {
     if (isAddingToCart) return;
 
@@ -157,7 +149,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         );
 
-        // Sepet sayısını güncelle
         _checkCartItemCount();
       }
     } catch (e) {
@@ -188,28 +179,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Üst bar (geri butonu ve favori butonu)
               _buildTopBar(),
 
-              // Ürün görselleri
               _buildProductImages(),
 
-              // Ürün bilgileri
               _buildProductInfo(),
 
-              // Beden seçimi
               _buildSizeSelector(),
 
-              // Renk seçimi
               _buildColorSelector(),
 
-              // Miktar seçimi
               _buildQuantitySelector(),
 
-              // Ürün açıklaması ve detaylar
               _buildProductDetails(),
 
-              // Alt boşluk (FAB için yer bırakma)
               const SizedBox(height: 80),
             ],
           ),
@@ -226,7 +209,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Geri butonu
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -239,7 +221,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Image.asset('assets/icons/backbutton.png'),
             ),
           ),
-          // Favori butonu
+
           GestureDetector(
             onTap: _toggleFavorite,
             child: Container(
@@ -495,7 +477,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          // Ürün açıklaması
+
           Text(
             'Hareket özgürlüğü ve ikonik stil bir arada.'
             'Nike Windrunner eşofman altı, hafif yapısı ve rahat kesimiyle gün boyu konfor sunar. Günlük kullanım için ideal, zamansız bir parça.',
@@ -507,7 +489,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ),
           const SizedBox(height: 24),
-          // Kargo bilgileri
+
           Text(
             'Gönderim & İade',
             style: GoogleFonts.gabarito(
@@ -527,7 +509,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ),
           const SizedBox(height: 24),
-          // Yorumlar bölümü
+
           _buildReviewsSection(),
         ],
       ),
@@ -566,7 +548,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ),
         const SizedBox(height: 16),
-        // Yorum kartları
+
         _buildReviewCard(),
       ],
     );
@@ -633,18 +615,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       children: List.generate(5, (index) {
         IconData icon;
         if (index < rating.floor()) {
-          icon = Icons.star; // dolu yıldız
+          icon = Icons.star;
         } else if (index < rating && rating % 1 >= 0.5) {
-          icon = Icons.star_half; // yarım yıldız
+          icon = Icons.star_half;
         } else {
-          icon = Icons.star_border; // boş yıldız
+          icon = Icons.star_border;
         }
 
-        return Icon(
-          icon,
-          size: 16,
-          color: Color(0xFF8E6CEF), // mor ton
-        );
+        return Icon(icon, size: 16, color: Color(0xFF8E6CEF));
       }),
     );
   }
@@ -654,7 +632,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          // Ana sepete ekle butonu
           Expanded(
             child: Container(
               height: 52,
@@ -714,7 +691,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
           ),
-          // Sepet butonu (sadece sepette ürün varsa göster)
+
           if (cartItemCount > 0) ...[
             const SizedBox(width: 12),
             GestureDetector(

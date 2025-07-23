@@ -11,7 +11,6 @@ class AddSampleCoupons extends StatefulWidget {
 class _AddSampleCouponsState extends State<AddSampleCoupons> {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Örnek kuponları Firestore'a ekle (sadece geliştirme aşamasında kullan)
   static Future<void> addSampleCoupon23() async {
     final coupons = [
       {
@@ -39,7 +38,7 @@ class _AddSampleCouponsState extends State<AddSampleCoupons> {
         'discountType': 'percentage',
         'discountValue': 100,
         'minOrderAmount': 0,
-        'maxDiscount': 29.99, // Kargo ücreti kadar
+        'maxDiscount': 29.99,
         'expiryDate': DateTime.now().add(const Duration(days: 60)),
         'isActive': true,
         'description': 'Ücretsiz kargo',
