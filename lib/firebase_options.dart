@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
     projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
-    iosBundleId: 'com.example.ekcommerce',
+    iosBundleId: 'com.example.Wardrovia',
   );
 
   static FirebaseOptions get macos => FirebaseOptions(
@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
     projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
-    iosBundleId: 'com.example.ekcommerce',
+    iosBundleId: 'com.example.Wardrovia',
   );
 
   static FirebaseOptions get windows => FirebaseOptions(

@@ -1,4 +1,4 @@
-package com.example.ekcommerce
+package com.example.Wardrovia
 
 import io.flutter.embedding.android.FlutterActivity
 

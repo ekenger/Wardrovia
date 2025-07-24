@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "ekcommerce" "\0"
+            VALUE "FileDescription", "Wardrovia" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ekcommerce" "\0"
+            VALUE "InternalName", "Wardrovia" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "ekcommerce.exe" "\0"
-            VALUE "ProductName", "ekcommerce" "\0"
+            VALUE "OriginalFilename", "Wardrovia.exe" "\0"
+            VALUE "ProductName", "Wardrovia" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
