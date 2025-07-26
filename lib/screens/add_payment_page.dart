@@ -147,10 +147,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
         leading: Container(
           width: 40,
           height: 25,
-          decoration: BoxDecoration(
-            color: _getCardColor(paymentMethod.cardType),
-            borderRadius: BorderRadius.circular(4),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
           child: Center(child: _getCardIcon(paymentMethod.cardType)),
         ),
         title: Text(
@@ -398,19 +395,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
               horizontal: 16,
               vertical: 12,
             ),
-            suffixIcon:
-                _cardType.isNotEmpty
-                    ? Container(
-                      width: 40,
-                      height: 25,
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: _getCardColor(_cardType),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Center(child: _getCardIcon(_cardType)),
-                    )
-                    : null,
+            suffixIcon: _cardType.isNotEmpty ? _getCardIcon(_cardType) : null,
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -497,28 +482,28 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
           'assets/icons/visa.png',
           width: 30,
           height: 18,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
       case 'mastercard':
         return Image.asset(
           'assets/icons/mastercard.png',
           width: 30,
           height: 18,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
       case 'american express':
         return Image.asset(
           'assets/icons/amex.png',
           width: 30,
           height: 18,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
       default:
         return Image.asset(
           'assets/icons/default_card.png',
           width: 30,
           height: 18,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
     }
   }
