@@ -151,16 +151,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
             color: _getCardColor(paymentMethod.cardType),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Center(
-            child: Text(
-              paymentMethod.cardType.substring(0, 1).toUpperCase(),
-              style: GoogleFonts.gabarito(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          child: Center(child: _getCardIcon(paymentMethod.cardType)),
         ),
         title: Text(
           paymentMethod.maskedCardNumber,
@@ -417,16 +408,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                         color: _getCardColor(_cardType),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Center(
-                        child: Text(
-                          _cardType.substring(0, 1).toUpperCase(),
-                          style: GoogleFonts.gabarito(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      child: Center(child: _getCardIcon(_cardType)),
                     )
                     : null,
           ),
@@ -505,6 +487,39 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
         return const Color(0xFF006FCF);
       default:
         return const Color(0xFF8E6CEF);
+    }
+  }
+
+  Widget _getCardIcon(String cardType) {
+    switch (cardType.toLowerCase()) {
+      case 'visa':
+        return Image.asset(
+          'assets/icons/visa.png',
+          width: 30,
+          height: 18,
+          fit: BoxFit.contain,
+        );
+      case 'mastercard':
+        return Image.asset(
+          'assets/icons/mastercard.png',
+          width: 30,
+          height: 18,
+          fit: BoxFit.contain,
+        );
+      case 'american express':
+        return Image.asset(
+          'assets/icons/amex.png',
+          width: 30,
+          height: 18,
+          fit: BoxFit.contain,
+        );
+      default:
+        return Image.asset(
+          'assets/icons/default_card.png',
+          width: 30,
+          height: 18,
+          fit: BoxFit.contain,
+        );
     }
   }
 
