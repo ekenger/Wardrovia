@@ -92,6 +92,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Image.asset('assets/icons/backbutton.png'),
+        ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(

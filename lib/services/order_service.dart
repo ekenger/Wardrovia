@@ -43,6 +43,8 @@ class OrderService {
         'paymentStatus': 'paid',
         'createdAt': FieldValue.serverTimestamp(),
         'estimatedDelivery': DateTime.now().add(const Duration(days: 7)),
+        'shippedAt': null,
+        'deliveredAt': null,
       };
 
       await _firestore.collection('orders').doc(orderId).set(orderData);
@@ -104,5 +106,23 @@ class OrderService {
         .where('userId', isEqualTo: _userId)
         .where('orderStatus', isEqualTo: status)
         .snapshots();
+  }
+
+  static Future<void> updateOrderStatus(String orderId, String status) async {
+    if (_userId.isEmpty) throw Exception('User not authenticated');
+
+    try {
+      Map<String, dynamic> updateData = {'orderStatus': status};
+
+      if (status == 'shipped') {
+        updateData['shippedAt'] = FieldValue.serverTimestamp();
+      } else if (status == 'delivered') {
+        updateData['deliveredAt'] = FieldValue.serverTimestamp();
+      }
+
+      await _firestore.collection('orders').doc(orderId).update(updateData);
+    } catch (e) {
+      throw Exception('Failed to update order status: $e');
+    }
   }
 }

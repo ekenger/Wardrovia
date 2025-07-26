@@ -6,7 +6,48 @@ import 'package:Wardrovia/services/order_service.dart';
 class OrderDetailPage extends StatelessWidget {
   final String orderId;
 
-  const OrderDetailPage({super.key, required this.orderId});
+  OrderDetailPage({super.key, required this.orderId});
+
+  Map<String, dynamic>? _orderData;
+
+  void _setOrderData(Map<String, dynamic> data) {
+    _orderData = data;
+  }
+
+  String _getCreatedDate(Timestamp? createdAt) {
+    if (createdAt == null) return '';
+    return "${createdAt.toDate().day} ${_getMonthName(createdAt.toDate().month)}";
+  }
+
+  String _getShippedDate() {
+    if (_orderData == null) return '';
+    final shippedAt = _orderData!['shippedAt'] as Timestamp?;
+    if (shippedAt == null) return '';
+    return "${shippedAt.toDate().day} ${_getMonthName(shippedAt.toDate().month)}";
+  }
+
+  String _getDeliveredDate() {
+    if (_orderData == null) return '';
+    final deliveredAt = _orderData!['deliveredAt'] as Timestamp?;
+    if (deliveredAt == null) return '';
+    return "${deliveredAt.toDate().day} ${_getMonthName(deliveredAt.toDate().month)}";
+  }
+
+  String _getEstimatedDeliveryDate() {
+    if (_orderData == null) return '';
+    final estimatedDelivery = _orderData!['estimatedDelivery'];
+    DateTime date;
+
+    if (estimatedDelivery is Timestamp) {
+      date = estimatedDelivery.toDate();
+    } else if (estimatedDelivery is DateTime) {
+      date = estimatedDelivery;
+    } else {
+      return '';
+    }
+
+    return "Tahmini: ${date.day} ${_getMonthName(date.month)}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +65,7 @@ class OrderDetailPage extends StatelessWidget {
           }
 
           final orderData = snapshot.data!;
+          _setOrderData(orderData);
           return _buildOrderDetail(context, orderData);
         },
       ),
@@ -122,19 +164,6 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Widget _buildStatusTimeline(String orderStatus, Timestamp? createdAt) {
-    final statusList = ['confirmed', 'shipped', 'delivered'];
-    final statusLabels = {
-      'confirmed': 'Order Confirmed',
-      'shipped': 'Shipped',
-      'delivered': 'Delivered',
-    };
-
-    final currentIndex = statusList.indexOf(orderStatus);
-    final dateStr =
-        createdAt != null
-            ? "${createdAt.toDate().day} ${_getMonthName(createdAt.toDate().month)}"
-            : '';
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -143,28 +172,42 @@ class OrderDetailPage extends StatelessWidget {
             isCompleted: orderStatus == 'delivered',
             isActive: orderStatus == 'delivered',
             title: "Teslim Edildi",
-            date: orderStatus == 'delivered' ? dateStr : '',
+            date:
+                orderStatus == 'delivered'
+                    ? _getDeliveredDate()
+                    : _getEstimatedDeliveryDate(),
+            isEstimated: orderStatus != 'delivered',
           ),
           const SizedBox(height: 51),
           _buildStatusItem(
-            isCompleted: currentIndex >= 1,
+            isCompleted: ['shipped', 'delivered'].contains(orderStatus),
             isActive: orderStatus == 'shipped',
             title: "Kargoya Verildi",
-            date: currentIndex >= 1 ? dateStr : '',
+            date:
+                ['shipped', 'delivered'].contains(orderStatus)
+                    ? _getShippedDate()
+                    : '',
           ),
           const SizedBox(height: 51),
           _buildStatusItem(
-            isCompleted: currentIndex >= 0,
+            isCompleted: [
+              'confirmed',
+              'shipped',
+              'delivered',
+            ].contains(orderStatus),
             isActive: orderStatus == 'confirmed',
             title: "Sipariş Onaylandı",
-            date: currentIndex >= 0 ? dateStr : '',
+            date:
+                ['confirmed', 'shipped', 'delivered'].contains(orderStatus)
+                    ? _getCreatedDate(createdAt)
+                    : '',
           ),
           const SizedBox(height: 51),
           _buildStatusItem(
             isCompleted: true,
             isActive: false,
             title: "Sipariş Alındı",
-            date: dateStr,
+            date: _getCreatedDate(createdAt),
           ),
         ],
       ),
@@ -372,6 +415,7 @@ class OrderDetailPage extends StatelessWidget {
     required bool isActive,
     required String title,
     required String date,
+    bool isEstimated = false,
   }) {
     return Row(
       children: [
@@ -411,9 +455,11 @@ class OrderDetailPage extends StatelessWidget {
               fontSize: 12,
               height: 1.6,
               color:
-                  isActive
-                      ? const Color(0xFF272727)
-                      : const Color(0xFF272727).withOpacity(0.5),
+                  isEstimated
+                      ? const Color(0xFF8E6CEF)
+                      : (isActive
+                          ? const Color(0xFF272727)
+                          : const Color(0xFF272727).withOpacity(0.5)),
             ),
           ),
       ],
@@ -458,7 +504,7 @@ class OrderDetailPage extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Alınan Ürünler',
+            'Sipariş Ürünleri',
             style: GoogleFonts.gabarito(
               fontWeight: FontWeight.w700,
               fontSize: 18,
