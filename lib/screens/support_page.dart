@@ -332,7 +332,6 @@ class _SupportPageState extends State<SupportPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Form verilerini işle
       _showSuccessDialog();
     }
   }
