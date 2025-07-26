@@ -3,6 +3,9 @@ import 'package:Wardrovia/screens/add_address_page.dart';
 import 'package:Wardrovia/screens/add_payment_page.dart';
 import 'package:Wardrovia/screens/favorites_page.dart';
 import 'package:Wardrovia/screens/support_page.dart';
+import 'package:Wardrovia/screens/edit_profile_page.dart';
+import 'package:Wardrovia/services/user_service.dart';
+import 'package:Wardrovia/models/user.dart' as models;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,76 +28,110 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/ellipse_13.png'),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF4F4F4),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  width: MediaQuery.of(context).size.width - 48,
-                  height: 96,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 13,
-                          bottom: 8,
-                          left: 16,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Emre Kenger",
-                              style: GoogleFonts.gabarito(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                              ),
-                            ),
+                StreamBuilder<models.User?>(
+                  stream: UserService.getUserStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
 
-                            Text(
-                              "emre@ekcompany.com",
-                              style: GoogleFonts.figtree(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
+                    final user = snapshot.data;
 
-                            Text(
-                              "+90555123456",
-                              style: GoogleFonts.figtree(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Text(
-                          "Düzenle",
-                          style: GoogleFonts.gabarito(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                            color: Color(0xFF8E6CEF),
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: 80,
+                          height: 80,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                user?.profileImage != null
+                                    ? NetworkImage(user!.profileImage!)
+                                    : const AssetImage('assets/ellipse_13.png')
+                                        as ImageProvider,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(height: 32),
+
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF4F4F4),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          width: MediaQuery.of(context).size.width - 48,
+                          height: 96,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 13,
+                                  bottom: 8,
+                                  left: 16,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      user?.name ?? "Kullanıcı Adı",
+                                      style: GoogleFonts.gabarito(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      user?.email ?? "E-posta",
+                                      style: GoogleFonts.figtree(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      user?.phone ?? "Telefon",
+                                      style: GoogleFonts.figtree(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (user != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  EditProfilePage(user: user),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "Düzenle",
+                                    style: GoogleFonts.gabarito(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      color: const Color(0xFF8E6CEF),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
+
                 const SizedBox(height: 26),
                 Expanded(
                   child: ListView.builder(
@@ -125,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AddPaymentPage(),
+                                  builder: (context) => const AddPaymentPage(),
                                 ),
                               );
                               break;
@@ -179,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     'Vazgeç',
                                     style: GoogleFonts.gabarito(
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF8E6CEF),
+                                      color: const Color(0xFF8E6CEF),
                                     ),
                                   ),
                                 ),
@@ -193,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     'Evet',
                                     style: GoogleFonts.gabarito(
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF8E6CEF),
+                                      color: const Color(0xFF8E6CEF),
                                     ),
                                   ),
                                 ),
@@ -208,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: GoogleFonts.gabarito(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: Color(0xFFFA3636),
+                        color: const Color(0xFFFA3636),
                       ),
                     ),
                   ),
