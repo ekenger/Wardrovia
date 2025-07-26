@@ -29,7 +29,7 @@ class OrderService {
         'items': items,
         'totalAmount': totalAmount,
         'discountAmount': discountAmount ?? 0,
-        'finalAmount': totalAmount - (discountAmount ?? 0),
+        'finalAmount': totalAmount,
         'shippingAddress': shippingAddress.toFirestore(),
         'paymentMethod': {
           'cardType': paymentMethod.cardType,

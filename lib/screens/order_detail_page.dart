@@ -74,7 +74,7 @@ class OrderDetailPage extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  _buildOrderItems(items, finalAmount),
+                  _buildOrderItems(context, items, finalAmount),
 
                   const SizedBox(height: 40),
 
@@ -171,7 +171,11 @@ class OrderDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderItems(List items, double finalAmount) {
+  Widget _buildOrderItems(
+    BuildContext context,
+    List items,
+    double finalAmount,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -187,62 +191,67 @@ class OrderDetailPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 11),
-          Container(
-            width: 342,
-            height: 72,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF4F4F4),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+          GestureDetector(
+            onTap: () {
+              _showOrderItemsDialog(context, items);
+            },
+            child: Container(
+              width: 342,
+              height: 72,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4F4F4),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Image.asset('assets/icons/receipt1.png'),
                     ),
-                    child: Image.asset('assets/icons/receipt1.png'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${items.length} ürün",
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            height: 20 / 16,
-                            color: const Color(0xFF272727),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${items.length} ürün",
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              height: 20 / 16,
+                              color: const Color(0xFF272727),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "${finalAmount.toStringAsFixed(2)} TL",
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            height: 1.6,
-                            color: const Color(0xFF272727).withOpacity(0.5),
+                          Text(
+                            "${finalAmount.toStringAsFixed(2)} TL",
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              height: 1.6,
+                              color: const Color(0xFF272727).withOpacity(0.5),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Tümünü Gör",
-                    style: GoogleFonts.gabarito(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                      height: 14 / 12,
-                      color: const Color(0xFF8E6CEF),
+                    Text(
+                      "Tümünü Gör",
+                      style: GoogleFonts.gabarito(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                        height: 14 / 12,
+                        color: const Color(0xFF8E6CEF),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -252,8 +261,37 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Widget _buildShippingDetails(Map<String, dynamic> shippingAddress) {
-    final address = shippingAddress['address'] ?? 'Adres bilgisi bulunamadı';
-    final phone = shippingAddress['phone'] ?? 'Telefon bilgisi bulunamadı';
+    // Adres bilgilerini düzgün şekilde parse et
+    String formattedAddress = 'Adres bilgisi bulunamadı';
+    String phoneNumber = 'Telefon bilgisi bulunamadı';
+
+    if (shippingAddress.isNotEmpty) {
+      // Adres bilgilerini birleştir
+      final addressLine1 = shippingAddress['addressLine1'] ?? '';
+      final addressLine2 = shippingAddress['addressLine2'] ?? '';
+      final city = shippingAddress['city'] ?? '';
+      final state = shippingAddress['state'] ?? '';
+      final postalCode = shippingAddress['postalCode'] ?? '';
+      final country = shippingAddress['country'] ?? '';
+
+      List<String> addressParts = [];
+      if (addressLine1.isNotEmpty) addressParts.add(addressLine1);
+      if (addressLine2.isNotEmpty) addressParts.add(addressLine2);
+      if (city.isNotEmpty) addressParts.add(city);
+      if (state.isNotEmpty) addressParts.add(state);
+      if (postalCode.isNotEmpty) addressParts.add(postalCode);
+      if (country.isNotEmpty) addressParts.add(country);
+
+      if (addressParts.isNotEmpty) {
+        formattedAddress = addressParts.join(', ');
+      }
+
+      // Telefon numarası
+      phoneNumber =
+          shippingAddress['phoneNumber'] ??
+          shippingAddress['phone'] ??
+          'Telefon bilgisi bulunamadı';
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -282,9 +320,9 @@ class OrderDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    address,
+                    "Teslimat Adresi:",
                     style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                       height: 1.6,
                       color: const Color(0xFF272727),
@@ -292,7 +330,27 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    phone,
+                    formattedAddress,
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      height: 1.6,
+                      color: const Color(0xFF272727),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Telefon:",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      height: 1.6,
+                      color: const Color(0xFF272727),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    phoneNumber,
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
@@ -379,5 +437,133 @@ class OrderDetailPage extends StatelessWidget {
       'Aralık',
     ];
     return months[month];
+  }
+
+  double _parsePrice(dynamic price) {
+    if (price == null) return 0.0;
+    if (price is double) return price;
+    if (price is int) return price.toDouble();
+    if (price is String) {
+      // "1350 TL" gibi string değerleri parse et
+      String cleanPrice = price.replaceAll(RegExp(r'[^\d.,]'), '');
+      cleanPrice = cleanPrice.replaceAll(',', '.');
+      return double.tryParse(cleanPrice) ?? 0.0;
+    }
+    return 0.0;
+  }
+
+  void _showOrderItemsDialog(BuildContext context, List items) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Alınan Ürünler',
+            style: GoogleFonts.gabarito(
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 400,
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        // Ürün resmi
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey[200],
+                          ),
+                          child:
+                              item['image'] != null && item['image'].isNotEmpty
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      item['image'],
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
+                                        return const Icon(
+                                          Icons.image_not_supported,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                  : const Icon(Icons.shopping_bag),
+                        ),
+                        const SizedBox(width: 12),
+                        // Ürün bilgileri
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['name'] ?? 'Ürün adı bulunamadı',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Adet: ${item['quantity'] ?? 1}',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${_parsePrice(item['price']).toStringAsFixed(2)} TL',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: const Color(0xFF8E6CEF),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Kapat',
+                style: GoogleFonts.gabarito(
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF8E6CEF),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

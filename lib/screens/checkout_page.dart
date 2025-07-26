@@ -11,6 +11,7 @@ import 'package:Wardrovia/screens/order_placed_page.dart';
 import 'package:Wardrovia/services/coupon_service.dart';
 import 'package:Wardrovia/services/order_service.dart';
 import 'package:Wardrovia/services/cart_service.dart';
+import 'dart:async';
 
 class CheckoutPage extends StatefulWidget {
   final double subtotal;
@@ -39,6 +40,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   PaymentCard? selectedPaymentMethod;
   bool _isPlacingOrder = false;
   List<Map<String, dynamic>> _cartItems = [];
+  StreamSubscription? _cartSubscription;
 
   @override
   void initState() {
@@ -57,30 +59,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
   }
 
-  Future<void> _loadCartItems() async {
-    try {
-      final cartStream = CartService.getUserCartItems();
-      cartStream.listen((snapshot) {
-        final items =
-            snapshot.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
-              return {
-                'productId': doc.id,
-                'name': data['name'] ?? '',
-                'price': data['price'] ?? 0.0,
-                'quantity': data['quantity'] ?? 1,
-                'image': data['image'] ?? '',
-                'category': data['category'] ?? '',
-              };
-            }).toList();
+  void _loadCartItems() {
+    _cartSubscription = CartService.getUserCartItems().listen((snapshot) {
+      final items =
+          snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return {
+              'productId': doc.id,
+              'name': data['name'] ?? '',
+              'price': data['price'] ?? 0.0,
+              'quantity': data['quantity'] ?? 1,
+              'image': data['image'] ?? '',
+              'category': data['category'] ?? '',
+            };
+          }).toList();
 
+      if (mounted) {
         setState(() {
           _cartItems = items;
         });
-      });
-    } catch (e) {
-      print('Error loading cart items: $e');
-    }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _cartSubscription?.cancel();
+    super.dispose();
   }
 
   @override
