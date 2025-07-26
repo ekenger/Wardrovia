@@ -2,6 +2,7 @@ import 'package:Wardrovia/constants/custom_profile_list.dart';
 import 'package:Wardrovia/screens/add_address_page.dart';
 import 'package:Wardrovia/screens/add_payment_page.dart';
 import 'package:Wardrovia/screens/favorites_page.dart';
+import 'package:Wardrovia/screens/help_page.dart';
 import 'package:Wardrovia/screens/support_page.dart';
 import 'package:Wardrovia/screens/edit_profile_page.dart';
 import 'package:Wardrovia/services/user_service.dart';
@@ -170,11 +171,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SupportPage(),
+                                  builder: (context) => const HelpPage(),
                                 ),
                               );
                               break;
                             case 'Destek':
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SupportPage(),
+                                ),
+                              );
                               break;
                             default:
                               break;
